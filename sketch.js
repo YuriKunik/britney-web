@@ -9,16 +9,6 @@ let lineas1 = [];
 let lineas = [];
 let listaSelectP1 = []
 let listaSelectP2 = []
-let colores = []
-let boton1;
-let boton2;
-let boton3;
-let sliderLvl;
-let seleColor;
-let seleFrom;
-let seleTo;
-let seleLvl;
-let sliderAct;
 let checkerPant = false;
 let primer = true;
 let banderaFor = false;
@@ -30,51 +20,14 @@ let selectL2P1 = false;
 let selectL2P2 = false;
 let limite = 20000;
 let maxNivel = 200;
-let color1;
-let color2;
 
 function setup() {
-	cnv = createCanvas(windowWidth, windowHeight-100);
+	cnv = createCanvas(windowWidth, windowHeight);
 	cnv.mousePressed(checkPant);
     frameRate(30)
 	inicio();
-    boton1 = createButton("Agregar Linea");
-	boton2 = createButton("Borrar Linea");
-    boton3 = createButton("Guardar dibujo");
-	boton1.mousePressed(agregarLinea)
-	boton2.mousePressed(toggleBorrar)
-    boton3.mousePressed(guardarDibujo);
-    sliderAct = 5;
-	sliderLvl = createSlider(0, maxNivel,sliderAct,1);
-    sliderLvl.input(cambiarMax);
-	
-    seleFrom = createColorPicker("#D66C1E");
-	seleFrom.input(cambiarGradiente);
-    seleTo = createColorPicker("#219B15");
-	seleTo.input(cambiarGradiente); 
-
-    colores.push(color(20));
-    colores.push("#EB316B");
-    colores.push(color(234,199, 0));
-
-    color1 = color("#D66C1E")
-    color2 = color("#219B15")
-	
-	for (let i = 0; i < maxNivel-2; i++) {
-	//	seleLvl.option("Color nivel " + str(i+2), i+3);	
-		let c = lerpColor(color1, color2, i/maxNivel);
-		colores.push(c)
-	}
-
-    seleLvl = createSelect();
-	seleLvl.changed(actSeleColor);
-    seleLvl.option("Fondo",0);
-    seleLvl.option("Color nivel 0",1);
-    seleLvl.option("Color nivel 1",2);  
-    seleColor = createColorPicker(color(20));
-	seleColor.input(setColor);
-
-    cambiarMax();
+	setupDom();
+	cambiarMax();
 }
 
 function cambiarMax(){
@@ -91,7 +44,7 @@ function encontrarMaxLvl(){
 
 function cambiarGradiente(){
 	for (let i = 2; i < lvl; i++) {
-		let c = lerpColor(seleFrom.color(), seleTo.color(), i/lvl);
+		let c = lerpColor(color(seleFrom.value()), color(seleTo.value()), i/lvl);
 		colores[i] = c
 	}
 }
@@ -101,19 +54,17 @@ function guardarDibujo(){
 }
 
 function setColor(){
-	colores[seleLvl.value()] =  seleColor.color();
+	colores[seleLvl.value()] =  seleColor.value();
 }
 
 function actSeleColor(){
-	seleColor.remove()
-	seleColor = createColorPicker(colores[seleLvl.value()])
-	seleColor.input(setColor)
+	seleColor.value(colores[seleLvl.value()].toString());
 }
 
 function toggleBorrar(){
 	cambBorrar =! cambBorrar;
-	if(cambBorrar) boton2.html("Borrando")
-	else boton2.html("Borrar Linea")
+	if(cambBorrar) botones[1].html("Borrando")
+	else botones[1].html("Borrar Linea")
 }
 
 function borrarLineas(){

@@ -8,9 +8,28 @@
   <body>
     <main>
     </main>
-    <script src="sketch.js"></script>
+    <!-- <script src="sketch.js"></script> -->
+    <div id="Menu">
+		<div id="Menuheader">
+			Menu 
+		</div>
+	<button>Agregar Linea</button>
+	<button>Borrar Linea</button>
+	<button>Guardar Dibujo</button>
+	Nivel:
+	<input type="range" name="sliderLvl" id="sliderLvl" min = "1" max = "100" value="1">
+	Color inicial:
+	<input type="color" name="seleFrom" id="seleFrom" value="#D66C1E">
+	Color Final:
+	<input type="color" name="seleTo" id="seleTo" value="#219B15">
+	<select name="seleLvl" id="seleLvl" multiple size="1">
+	</select>
+	<input type="color" name="seleColor" id="seleColor" value="#141414">	
+	</div>
+	<script src="sketch.js"></script>
     <script src="linea.js"></script>
     <script src="modelos.js"></script>
-  
+    <script src="elementos_dom.js"></script>
+	<script src="mover_div.js"></script>
 
 </body></html>

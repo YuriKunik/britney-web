@@ -1,7 +1,47 @@
 html, body {
   margin: 0;
   padding: 0;
+  background-color: #141414;
+  font: 1.2em "Fira Sans", sans-serif;
 }
 canvas {
   display: block;
+}
+
+button {
+  background-color: #9C2ECC;
+  border: 1px solid #E5ECEF;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  /* text-decoration: none; */
+  /* display: inline-block; */
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+
+button:hover {
+	background-color: #C43BFF;
+}
+
+#Menu {
+  position: absolute;
+  top: 40px; left: 40px;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  text-decoration: none;
+  background-color: #141414;
+  border: 1px solid #E5ECEF;
+  text-align: center;
+}
+
+#Menuheader {
+  padding: 10px;
+  border: 1px solid #E5ECEF;
+  cursor: move;
+  z-index: 10;
+  background-color: #EB316B;
+  color: #fff;
 }
