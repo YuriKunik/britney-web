@@ -48,21 +48,24 @@ function setup() {
 	sliderLvl = createSlider(0, maxNivel,sliderAct,1);
     sliderLvl.input(cambiarMax);
 	
-	
     seleFrom = createColorPicker("#D66C1E");
 	seleFrom.input(cambiarGradiente);
     seleTo = createColorPicker("#219B15");
 	seleTo.input(cambiarGradiente); 
+
     colores.push(color(20));
     colores.push("#EB316B");
     colores.push(color(234,199, 0));
+
     color1 = color("#D66C1E")
     color2 = color("#219B15")
+	
 	for (let i = 0; i < maxNivel-2; i++) {
 	//	seleLvl.option("Color nivel " + str(i+2), i+3);	
 		let c = lerpColor(color1, color2, i/maxNivel);
 		colores.push(c)
 	}
+
     seleLvl = createSelect();
 	seleLvl.changed(actSeleColor);
     seleLvl.option("Fondo",0);
@@ -70,31 +73,31 @@ function setup() {
     seleLvl.option("Color nivel 1",2);  
     seleColor = createColorPicker(color(20));
 	seleColor.input(setColor);
-    cambiarMax();
 
+    cambiarMax();
 }
 
 function cambiarMax(){
-    encontrarMaxLvl();
-  cambiarGradiente();
-  sliderLvl.value(lvl);
+	encontrarMaxLvl();
+	cambiarGradiente();
+	sliderLvl.value(lvl);
 }
 
 function encontrarMaxLvl(){
-  for(let i = 0; i <= sliderLvl.value() && lineas1.length ** i< limite; i++){
-      lvl = i;
+	for(let i = 0; i <= sliderLvl.value() && lineas1.length ** i< limite; i++){
+		lvl = i;
     }
 }
 
 function cambiarGradiente(){
-  for (let i = 2; i < lvl; i++) {
+	for (let i = 2; i < lvl; i++) {
 		let c = lerpColor(seleFrom.color(), seleTo.color(), i/lvl);
 		colores[i] = c
 	}
 }
 
 function guardarDibujo(){
-  saveCanvas(cnv, 'mifractal', 'jpg');
+	saveCanvas(cnv, 'mifractal', 'jpg');
 }
 
 function setColor(){
@@ -121,54 +124,6 @@ function borrarLineas(){
 		}
 	}
     cambiarMax();
-}
-
-function draw() { 
-    background(colores[0]);
-	if(checkerPant && mouseIsPressed){
-		actualizarLineas();
-	}
-	
-    strokeWeight(1);
-  
-	stroke(colores[1])
-	l1.dibujar();
-	
-    for (var i = 0; i < lineas1.length; i++) {
-	  stroke(colores[2]);
-      lineas1[i].dibujar1();
-	}
-  	
-    lineas.push(lineas1);
-	
-    
-	for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
-		lineas.push([])
-		stroke(colores[i+2])
-		for (var j = 0; j < lineas[0].length; j++) {
-			for (var k = 0; k < lineas1.length; k++) {
-					s1 = lineas1[k].desp.copy()
-					s1.rotate(lineas[0][j].o)
-					s1.mult(lineas[0][j].r)
-					s1.add(lineas[0][j].p1);
-					let v1 =  lineas[0][j].v.copy()
-					v1.rotate(lineas1[k].o)
-					v1.mult(lineas1[k].r)
-					let s2 = p5.Vector.add(s1,v1);
-					let l3 = new LineaN(s1,s2,lineas[0][j]);
-					l3.dibujar()
-					lineas[1].push(l3)
-		  }
-		}
-      
-        lineas = [lineas[1]]
-        
-	}
-
-	lineas = [];
-	
-    if(!cambLinea) checkearSelect();	
-	if(cambBorrar) selectLinea();
 }
 
 function checkearSelect(){
@@ -247,11 +202,6 @@ function actualizarLineas(){
 			}
 }
 
-function punto(p){
-	strokeWeight(25);
-	point(p.x,p.y);
-}
-
 function checkPant(){
 	checkerPant = true;
 }
@@ -261,7 +211,7 @@ function agregarLinea(){
 	q2 = createVector(width/2-50, height/2 -200);
 	let l3 = new Linea1(q1,q2,l1,false,false);
 	lineas1.push(l3)
-     cambiarMax();
+    cambiarMax();
 }
 
 function mouseReleased(){
@@ -293,4 +243,52 @@ function selectLinea(){
 		}
 		else lineas1[i].select = false;
 	}
+}
+
+function draw() { 
+    background(colores[0]);
+	if(checkerPant && mouseIsPressed){
+		actualizarLineas();
+	}
+	
+    strokeWeight(1);
+  
+	stroke(colores[1])
+	l1.dibujar();
+	
+    for (var i = 0; i < lineas1.length; i++) {
+	  stroke(colores[2]);
+      lineas1[i].dibujar1();
+	}
+  	
+    lineas.push(lineas1);
+	
+    
+	for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
+		lineas.push([])
+		stroke(colores[i+2])
+		for (var j = 0; j < lineas[0].length; j++) {
+			for (var k = 0; k < lineas1.length; k++) {
+					s1 = lineas1[k].desp.copy()
+					s1.rotate(lineas[0][j].o)
+					s1.mult(lineas[0][j].r)
+					s1.add(lineas[0][j].p1);
+					let v1 =  lineas[0][j].v.copy()
+					v1.rotate(lineas1[k].o)
+					v1.mult(lineas1[k].r)
+					let s2 = p5.Vector.add(s1,v1);
+					let l3 = new LineaN(s1,s2,lineas[0][j]);
+					l3.dibujar()
+					lineas[1].push(l3)
+		  }
+		}
+      
+        lineas = [lineas[1]]
+        
+	}
+
+	lineas = [];
+	
+    if(!cambLinea) checkearSelect();	
+	if(cambBorrar) selectLinea();
 }
