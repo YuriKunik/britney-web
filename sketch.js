@@ -18,16 +18,41 @@ let selectL1P2 = false;
 let selectL1P1 = false;
 let selectL2P1 = false;
 let selectL2P2 = false;
+let moviendo = false;
 let limite = 20000;
 let maxNivel = 200;
+let escala = 1;
+let transl;
+let mousex;
+let mousey;
+let mouseOffx= 0;
+let mouseOffy= 0;
+let offX = 0;
+let offY = 0;
+let xAct = 0;
+let yAct = 0;
+let xAnt = 0;
+let yAnt = 0;
+
+function mundoAPantalla(p1){
+	return createVector(p1.x - offX , p1.y - offY); 
+}
+
+function pantallaAMundo(p1){
+	return createVector(p1.x + offX , p1.y + offY); 
+}
 
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
 	cnv.mousePressed(checkPant);
+	transl = createVector(0,0);
     frameRate(30)
+	// scale(1/2);
 	inicio();
 	setupDom();
 	cambiarMax();
+	xAct = 0;
+	yAct = 0;
 }
 
 function cambiarMax(){
@@ -79,11 +104,11 @@ function borrarLineas(){
 
 function checkearSelect(){
 	  strokeWeight(25);
-  if((mouseX-l1.p1.x)**2 + (mouseY-l1.p1.y)**2 < 625){
+  if((mousex-l1.p1.x)**2 + (mousey-l1.p1.y)**2 < 625){
 			stroke(colores[1]);
 			point(l1.p1.x, l1.p1.y);
 			selectL1P1 = true;
-		}else if((mouseX-l1.p2.x)**2 + (mouseY-l1.p2.y)**2 < 625){
+		}else if((mousex-l1.p2.x)**2 + (mousey-l1.p2.y)**2 < 625){
 			stroke(colores[1]);
 			point(l1.p2.x, l1.p2.y);
 			selectL1P2 = true;
@@ -92,14 +117,14 @@ function checkearSelect(){
 			selectL1P1 = false;
 		}
 		for (var i = 0; i < lineas1.length; i++) {
-			if((mouseX-lineas1[i].p1.x)**2 + (mouseY-lineas1[i].p1.y)**2 < 625){
+			if((mousex-lineas1[i].p1.x)**2 + (mousey-lineas1[i].p1.y)**2 < 625){
 				stroke(colores[2]);
 				point(lineas1[i].p1.x, lineas1[i].p1.y)
 				for(var j = 0; j< lineas1.length; j++){
 					lineas1[j].selectP1 = i == j;
 					lineas1[j].selectP2 = false;
 				}
-			}else if((mouseX-lineas1[i].p2.x)**2 + (mouseY-lineas1[i].p2.y)**2 < 625){
+			}else if((mousex-lineas1[i].p2.x)**2 + (mousey-lineas1[i].p2.y)**2 < 625){
 				stroke(colores[2]);
 				point(lineas1[i].p2.x, lineas1[i].p2.y)
 				for(var j = 0; j< lineas1.length; j++){
@@ -115,42 +140,42 @@ function checkearSelect(){
 
 function actualizarLineas(){
 	if(selectL1P1){
-				l1 = new Linea(createVector(mouseX,mouseY),l1.p2)
-				for (var i = 0; i < lineas1.length; i++) {
-					lineas1[i] = new Linea1(lineas1[i].p1, lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
-				
+		l1 = new Linea(createVector(mousex,mousey),l1.p2)
+		for (var i = 0; i < lineas1.length; i++) {
+			lineas1[i] = new Linea1(lineas1[i].p1, lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
 			strokeWeight(25)
-			point(mouseX,mouseY)
-				}
-			}
-			else if(selectL1P2){
-				l1 = new Linea(l1.p1, createVector(mouseX,mouseY))
-				for (var i = 0; i < lineas1.length; i++) {
-					lineas1[i] = new Linea1(lineas1[i].p1,lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
-				
+			point(mousex,mousey)
+		}
+		cambLinea=true;
+	}
+	else if(selectL1P2){
+		l1 = new Linea(l1.p1, createVector(mousex,mousey))
+		for (var i = 0; i < lineas1.length; i++) {
+			lineas1[i] = new Linea1(lineas1[i].p1,lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
 			strokeWeight(25)
-			point(mouseX,mouseY)
-				}
-			}else{
-				banderaFor = false
-				for (var i = 0; i < lineas1.length; i++) {
-					if(lineas1[i].selectP1){
-						lineas1[i] = new Linea1(createVector(mouseX,mouseY),lineas1[i].p2,l1, lineas1[i].selectP1, lineas1[i].selectP2);
-						banderaFor = true;
-						stroke(colores[2])
-						strokeWeight(25)
-						point(mouseX,mouseY)
-						
-					}else if(lineas1[i].selectP2){
-						lineas1[i] = new Linea1(lineas1[i].p1,createVector(mouseX,mouseY),l1, lineas1[i].selectP1, lineas1[i].selectP2)
-						banderaFor = true;
-					    stroke(colores[2])
-						strokeWeight(25)
-						point(mouseX,mouseY)
-					}
-				}
-				if(banderaFor) cambLinea= true;
+			point(mousex,mousey)
+		}
+		cambLinea=true;
+	}else{
+		banderaFor = false
+		for (var i = 0; i < lineas1.length; i++) {
+			if(lineas1[i].selectP1){
+				lineas1[i] = new Linea1(createVector(mousex,mousey),lineas1[i].p2,l1, lineas1[i].selectP1, lineas1[i].selectP2);
+				banderaFor = true;
+				stroke(colores[2])
+				strokeWeight(25)
+				point(mousex,mousey)
+				
+			}else if(lineas1[i].selectP2){
+				lineas1[i] = new Linea1(lineas1[i].p1,createVector(mousex,mousey),l1, lineas1[i].selectP1, lineas1[i].selectP2)
+				banderaFor = true;
+				stroke(colores[2])
+				strokeWeight(25)
+				point(mousex,mousey)
 			}
+		}
+		if(banderaFor) cambLinea= true;
+	}
 }
 
 function checkPant(){
@@ -165,14 +190,9 @@ function agregarLinea(){
     cambiarMax();
 }
 
-function mouseReleased(){
-	cambLinea = false;
-	if(cambBorrar && lineas1.length > 0) borrarLineas();
-}
-
 function distPL(linea){
-	let pm1 = mouseX - linea.p1.x;
-	let pm2 = mouseY - linea.p1.y;
+	let pm1 = mousex - linea.p1.x;
+	let pm2 = mousey - linea.p1.y;
 	let mouseVect = createVector(pm1,pm2);
 	let o = mouseVect.angleBetween(linea.v);
 	let a = mouseVect.mag();
@@ -196,10 +216,47 @@ function selectLinea(){
 	}
 }
 
+function panMundo(){
+	if(!moviendo){
+		moviendo = true;
+		offX = mouseX;
+		offY = mouseY;
+	}
+	xAct = mouseX
+	yAct = mouseY
+}
+
+function mouseReleased(){
+	cambLinea = false;
+	if(moviendo){
+		moviendo = false;
+		xAnt += xAct- offX;
+		yAnt += yAct - offY;
+		offX = 0;
+		offY = 0;
+		xAct = 0;
+		yAct = 0;
+	}
+	if(cambBorrar && lineas1.length > 0) borrarLineas();
+}
+
 function draw() { 
     background(colores[0]);
+	mousex = mouseX - xAnt + xAct - offX
+	mousey = mouseY - yAnt + yAct -offY
+	translate(xAnt + xAct - offX,yAnt + yAct -offY);
+	// point(mouseX/escala, mouseY/escala)
+	// mousey = mouseY;
+	// print(l1.p1o, l1.p2o)
+	// l1 = new Linea(l1.p1o, l1.p2o)
+
 	if(checkerPant && mouseIsPressed){
-		actualizarLineas();
+		if(!moviendo){
+			actualizarLineas();
+		}
+		if(!cambLinea){
+			panMundo();
+		}
 	}
 	
     strokeWeight(1);
@@ -209,6 +266,7 @@ function draw() {
 	
     for (var i = 0; i < lineas1.length; i++) {
 	  stroke(colores[2]);
+	  // lineas1[i] = new Linea1(lineas1[i].p1o, lineas1[i].p2o, l1, false, false);
       lineas1[i].dibujar1();
 	}
   	
@@ -240,6 +298,6 @@ function draw() {
 
 	lineas = [];
 	
-    if(!cambLinea) checkearSelect();	
+    if(!cambLinea && !moviendo) checkearSelect();	
 	if(cambBorrar) selectLinea();
 }

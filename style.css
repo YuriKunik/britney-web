@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: #141414;
-  font: 1.2em "Fira Sans", sans-serif;
+  font: 1em "Fira Sans", sans-serif;
 }
 canvas {
   display: block;
@@ -14,14 +14,25 @@ button {
   color: white;
   padding: 15px 32px;
   text-align: center;
+  font: 1em "Fira Sans", sans-serif;
   /* text-decoration: none; */
   /* display: inline-block; */
-  font-size: 16px;
   transition-duration: 0.4s;
 }
 
 button:hover {
 	background-color: #C43BFF;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+color: white;
+  text-decoration: none;
+  background-color: #141414;
+  border: 1px solid #E5ECEF;
+  text-align: center;
+
 }
 
 #Menu {
