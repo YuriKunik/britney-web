@@ -19,6 +19,7 @@ let selectL1P1 = false;
 let selectL2P1 = false;
 let selectL2P2 = false;
 let moviendo = false;
+let moviendoMenu = false;
 let limite = 20000;
 let maxNivel = 200;
 let escala = 1;
@@ -228,6 +229,8 @@ function panMundo(){
 
 function mouseReleased(){
 	cambLinea = false;
+	moviendoMenu = false;
+	checkerPant = false;
 	if(moviendo){
 		moviendo = false;
 		xAnt += xAct- offX;
@@ -242,19 +245,15 @@ function mouseReleased(){
 
 function draw() { 
     background(colores[0]);
-	mousex = mouseX - xAnt + xAct - offX
-	mousey = mouseY - yAnt + yAct -offY
+	mousex = mouseX - xAnt - xAct + offX
+	mousey = mouseY - yAnt - yAct +offY
 	translate(xAnt + xAct - offX,yAnt + yAct -offY);
-	// point(mouseX/escala, mouseY/escala)
-	// mousey = mouseY;
-	// print(l1.p1o, l1.p2o)
-	// l1 = new Linea(l1.p1o, l1.p2o)
 
 	if(checkerPant && mouseIsPressed){
 		if(!moviendo){
 			actualizarLineas();
 		}
-		if(!cambLinea){
+		if(!cambLinea && !moviendoMenu){
 			panMundo();
 		}
 	}

@@ -19,6 +19,7 @@ function dragMouseDown(e) {
     document.onmouseup = closeDragElement;
     // call a function whenever the cursor moves:
     document.onmousemove = elementDrag;
+	moviendoMenu = true;
 }
 
 function elementDrag(e) {
