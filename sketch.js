@@ -35,20 +35,11 @@ let yAct = 0;
 let xAnt = 0;
 let yAnt = 0;
 
-function mundoAPantalla(p1){
-	return createVector(p1.x - offX , p1.y - offY); 
-}
-
-function pantallaAMundo(p1){
-	return createVector(p1.x + offX , p1.y + offY); 
-}
-
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
 	cnv.mousePressed(checkPant);
 	transl = createVector(0,0);
     frameRate(30)
-	// scale(1/2);
 	inicio();
 	setupDom();
 	cambiarMax();
@@ -58,6 +49,7 @@ function setup() {
 
 function cambiarMax(){
 	encontrarMaxLvl();
+	if(lineas1.length == 2) lvl -= 1;
 	cambiarGradiente();
 	sliderLvl.value(lvl);
 }
@@ -104,18 +96,22 @@ function borrarLineas(){
 }
 
 function checkearSelect(){
+	let select1 = false;
 	  strokeWeight(25);
   if((mousex-l1.p1.x)**2 + (mousey-l1.p1.y)**2 < 625){
 			stroke(colores[1]);
 			point(l1.p1.x, l1.p1.y);
 			selectL1P1 = true;
+			select1 = true
 		}else if((mousex-l1.p2.x)**2 + (mousey-l1.p2.y)**2 < 625){
 			stroke(colores[1]);
 			point(l1.p2.x, l1.p2.y);
 			selectL1P2 = true;
+			select1 = true
 		}else{
 			selectL1P2 = false;
 			selectL1P1 = false;
+			document.getElementById(cnv.id()).style.cursor = "default";
 		}
 		for (var i = 0; i < lineas1.length; i++) {
 			if((mousex-lineas1[i].p1.x)**2 + (mousey-lineas1[i].p1.y)**2 < 625){
@@ -125,6 +121,7 @@ function checkearSelect(){
 					lineas1[j].selectP1 = i == j;
 					lineas1[j].selectP2 = false;
 				}
+				select1 = true
 			}else if((mousex-lineas1[i].p2.x)**2 + (mousey-lineas1[i].p2.y)**2 < 625){
 				stroke(colores[2]);
 				point(lineas1[i].p2.x, lineas1[i].p2.y)
@@ -132,11 +129,19 @@ function checkearSelect(){
 					lineas1[j].selectP2 = i == j;
 					lineas1[j].selectP1 = false;
 				}
+				select1 = true
 			}else {
 				lineas1[i].selectP1 = false;
 				lineas1[i].selectP2 = false;
 			}
 		}
+		if(select1) {
+			document.getElementById(cnv.id()).style.cursor = "grab";
+			select1 = false;
+		}else{
+			document.getElementById(cnv.id()).style.cursor = "default";
+		}
+
 }
 
 function actualizarLineas(){
@@ -144,19 +149,23 @@ function actualizarLineas(){
 		l1 = new Linea(createVector(mousex,mousey),l1.p2)
 		for (var i = 0; i < lineas1.length; i++) {
 			lineas1[i] = new Linea1(lineas1[i].p1, lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
-			strokeWeight(25)
-			point(mousex,mousey)
 		}
+		stroke(colores[1]);
+		strokeWeight(25)
+		point(mousex,mousey)
 		cambLinea=true;
+		document.getElementById(cnv.id()).style.cursor = "move";
 	}
 	else if(selectL1P2){
 		l1 = new Linea(l1.p1, createVector(mousex,mousey))
+		stroke(colores[1]);
+		strokeWeight(25)
+		point(mousex,mousey)
 		for (var i = 0; i < lineas1.length; i++) {
 			lineas1[i] = new Linea1(lineas1[i].p1,lineas1[i].p2,l1, lineas1[i].selectP1,lineas1[i].selectP2)
-			strokeWeight(25)
-			point(mousex,mousey)
 		}
 		cambLinea=true;
+		document.getElementById(cnv.id()).style.cursor = "move";
 	}else{
 		banderaFor = false
 		for (var i = 0; i < lineas1.length; i++) {
@@ -166,13 +175,14 @@ function actualizarLineas(){
 				stroke(colores[2])
 				strokeWeight(25)
 				point(mousex,mousey)
-				
+				document.getElementById(cnv.id()).style.cursor = "move";
 			}else if(lineas1[i].selectP2){
 				lineas1[i] = new Linea1(lineas1[i].p1,createVector(mousex,mousey),l1, lineas1[i].selectP1, lineas1[i].selectP2)
 				banderaFor = true;
 				stroke(colores[2])
 				strokeWeight(25)
 				point(mousex,mousey)
+				document.getElementById(cnv.id()).style.cursor = "move";
 			}
 		}
 		if(banderaFor) cambLinea= true;
@@ -242,13 +252,33 @@ function mouseReleased(){
 	}
 	if(cambBorrar && lineas1.length > 0) borrarLineas();
 }
+let sf = 1, tx = 0, ty = 0;
+
+function applyScale(s) {
+    sf = sf * s;
+    tx = mouseX * (1-s) + tx * s;
+    ty = mouseY * (1-s) + ty * s;
+}
+
+window.addEventListener("wheel", function(e) {
+    applyScale(e.deltaY > 0 ? 0.95 : 1.05);
+} );
+
+function keyPressed() {
+    if (key == '-') {
+        applyScale(0.95);
+    } else if (key == '+') {
+        applyScale(1.05);
+    }
+}
 
 function draw() { 
     background(colores[0]);
-	mousex = mouseX - xAnt - xAct + offX
-	mousey = mouseY - yAnt - yAct +offY
-	translate(xAnt + xAct - offX,yAnt + yAct -offY);
-
+	mousex = (mouseX  - tx - xAnt - xAct + offX)/sf
+	mousey = (mouseY - ty - yAnt - yAct +offY)/sf
+	translate(tx, ty);
+	scale(sf);
+	translate((xAnt + xAct - offX)/sf,(yAnt + yAct -offY)/sf);
 	if(checkerPant && mouseIsPressed){
 		if(!moviendo){
 			actualizarLineas();
@@ -257,21 +287,14 @@ function draw() {
 			panMundo();
 		}
 	}
-	
     strokeWeight(1);
-  
 	stroke(colores[1])
 	l1.dibujar();
-	
     for (var i = 0; i < lineas1.length; i++) {
 	  stroke(colores[2]);
-	  // lineas1[i] = new Linea1(lineas1[i].p1o, lineas1[i].p2o, l1, false, false);
       lineas1[i].dibujar1();
 	}
-  	
     lineas.push(lineas1);
-	
-    
 	for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
 		lineas.push([])
 		stroke(colores[i+2])
@@ -290,13 +313,9 @@ function draw() {
 					lineas[1].push(l3)
 		  }
 		}
-      
         lineas = [lineas[1]]
-        
 	}
-
 	lineas = [];
-	
     if(!cambLinea && !moviendo) checkearSelect();	
 	if(cambBorrar) selectLinea();
 }
