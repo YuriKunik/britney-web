@@ -20,6 +20,8 @@ let selectL2P1 = false;
 let selectL2P2 = false;
 let moviendo = false;
 let moviendoMenu = false;
+let agregandoLinea = false;
+let primerPunto = false;
 let limite = 20000;
 let maxNivel = 200;
 let escala = 1;
@@ -34,6 +36,7 @@ let xAct = 0;
 let yAct = 0;
 let xAnt = 0;
 let yAnt = 0;
+let cursorActual = "default";
 
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
@@ -81,8 +84,14 @@ function actSeleColor(){
 
 function toggleBorrar(){
 	cambBorrar =! cambBorrar;
-	if(cambBorrar) botones[1].html("Borrando")
-	else botones[1].html("Borrar Linea")
+	if(cambBorrar){
+		botones[1].html("Borrando")
+		document.getElementById("borrLinea").style.backgroundColor = "#C43BFF";
+	}
+	else{
+		botones[1].html("Borrar Linea")
+		document.getElementById("borrLinea").style.backgroundColor= "#9C2ECC";
+	}
 }
 
 function borrarLineas(){
@@ -194,11 +203,23 @@ function checkPant(){
 }
 
 function agregarLinea(){
-	q1 = createVector(width/2, height/2);
-	q2 = createVector(width/2-50, height/2 -200);
-	let l3 = new Linea1(q1,q2,l1,false,false);
-	lineas1.push(l3)
-    cambiarMax();
+	agregandoLinea = true;
+	primerPunto = true;
+}
+
+function nuevaLinea(){
+	if(primerPunto){
+		q1 = createVector(mousex, mousey);
+		q2 = createVector(mousex, mousey);
+		let l3 = new Linea1(q1,q2,l1,false,false);
+		lineas1.push(l3);
+		cambiarMax();
+		primerPunto = false;
+	}else{
+		q2 = createVector(mousex, mousey);
+		lineas1[lineas1.length-1] = new Linea1(q1,q2,l1,false,false);
+	}
+	document.getElementById(cnv.id()).style.cursor = "move";
 }
 
 function distPL(linea){
@@ -241,6 +262,8 @@ function mouseReleased(){
 	cambLinea = false;
 	moviendoMenu = false;
 	checkerPant = false;
+	document.getElementById("agregLinea").style.backgroundColor= "#9C2ECC";
+	if(! primerPunto) agregandoLinea = false;
 	if(moviendo){
 		moviendo = false;
 		xAnt += xAct- offX;
@@ -279,11 +302,24 @@ function draw() {
 	translate(tx, ty);
 	scale(sf);
 	translate((xAnt + xAct - offX)/sf,(yAnt + yAct -offY)/sf);
+    if(!cambLinea && !moviendo) checkearSelect();	
+	if(cambBorrar) {
+		selectLinea();		
+		document.getElementById("borrLinea").style.backgroundColor = "#C43BFF";
+	}
+	if(agregandoLinea){
+		document.getElementById(cnv.id()).style.cursor = "copy";
+		document.getElementById("agregLinea").style.backgroundColor= "#C43BFF"
+
+	}
 	if(checkerPant && mouseIsPressed){
-		if(!moviendo){
+		if(agregandoLinea){
+			nuevaLinea();
+		}
+		if(!moviendo && !agregandoLinea){
 			actualizarLineas();
 		}
-		if(!cambLinea && !moviendoMenu){
+		if(!cambLinea && !moviendoMenu && !agregandoLinea){
 			panMundo();
 		}
 	}
@@ -316,6 +352,4 @@ function draw() {
         lineas = [lineas[1]]
 	}
 	lineas = [];
-    if(!cambLinea && !moviendo) checkearSelect();	
-	if(cambBorrar) selectLinea();
 }
