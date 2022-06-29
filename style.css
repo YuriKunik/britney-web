@@ -4,6 +4,7 @@ html, body {
   background-color: #141414;
   font: 1em "Fira Sans", sans-serif;
 }
+
 canvas {
   display: block;
 }
@@ -34,6 +35,13 @@ color: white;
   border: 1px solid #E5ECEF;
   text-align: center;
 
+}
+
+input[type=color] {
+	display: block;
+	align: center;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #Menu {
