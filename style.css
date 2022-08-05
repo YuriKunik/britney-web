@@ -38,12 +38,16 @@ color: white;
 }
 
 input[type=color] {
-	display: block;
-	align: center;
-	margin-left: auto;
-	margin-right: auto;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 4px;
+  cursor: pointer;
+  height: 3em;
+  padding: 0;
+  width: 15em;
 }
-
 #Menu {
   position: absolute;
   top: 40px; left: 40px;
