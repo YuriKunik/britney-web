@@ -22,6 +22,7 @@ let moviendo = false;
 let moviendoMenu = false;
 let agregandoLinea = false;
 let primerPunto = false;
+let animar = false;
 let limite = 20000;
 let maxNivel = 200;
 let escala = 1;
@@ -67,6 +68,7 @@ function reset(){
 		incs.push(0);	
 	}
 	incLvlActual = 1;
+	animar = true;
 }
 
 function checkZoom(){
@@ -78,7 +80,12 @@ function cambiarMaxSlider(){
 	if(lineas1.length == 2) lvl -= 1;
 	cambiarGradiente();
 	sliderLvl.value(lvl);
-	reset();
+	incs = []
+	for (let i = 0, len = lvl; i < len; i++) {
+		incs.push(velocidad);	
+	}
+	incLvlActual = sliderLvl.value() -2
+	animar = false
 }
 
 function cambiarMax(){
@@ -86,7 +93,12 @@ function cambiarMax(){
 	if(lineas1.length == 2) lvl -= 1;
 	cambiarGradiente();
 	sliderLvl.value(lvl);
-	reset();
+	incs = []
+	for (let i = 0, len = lvl; i < len; i++) {
+		incs.push(velocidad);	
+	}
+	incLvlActual = sliderLvl.value() -2
+	animar = false
 }
 
 function encontrarMaxLvlSlider(){
@@ -389,16 +401,12 @@ function draw() {
 		for (var j = 0; j < lineas[0].length; j++) {
 			for (var k = 0; k < lineas1.length; k++) {
 					s1 = lineas1[k].desp.copy()
-					// s1.rotate(map(inc, 0,velocidad,0,lineas[0][j].o))
 					s1.rotate(lineas[0][j].o)
 					s1.mult(lineas[0][j].r)
-					// s1.mult(map(inc,0,velocidad,0,lineas[0][j].r))
 					s1.add(lineas[0][j].p1);
 					let v1 =  lineas[0][j].v.copy()
 					v1.rotate(lineas1[k].o)
-					// v1.rotate(map(inc,0,velocidad,0,lineas1[k].o))
 					v1.mult(map(incs[i+1],0,velocidad,0,lineas1[k].r))
-					// v1.mult(lineas1[k].r)
 					let s2 = p5.Vector.add(s1,v1);
 					let l3 = new LineaN(s1,s2,lineas[0][j]);
 					l3.dibujar()
@@ -408,23 +416,26 @@ function draw() {
         lineas = [lineas[1]]
 	}
 	lineas = [];
-	if(incs[incLvlActual] < velocidad){ incs[incLvlActual] = (incs[incLvlActual] + 1) }
-	else{
-		// inc = 0;
-		// espera = 0;
-		if(incLvlActual >= sliderLvl.value()-2){
-			
-			if(espera < 700){
-				espera++;
-			}else{espera = 0;
-			incLvlActual=2;
-			for (let i = 0, len = lvl; i < len; i++) {
-				incs[i] = 0;
-			}
-			}
-		}
+	if(animar){
+		if(incs[incLvlActual] < velocidad){ incs[incLvlActual] = (incs[incLvlActual] + 1) }
 		else{
-			incLvlActual++;
+			// inc = 0;
+			// espera = 0;
+			if(incLvlActual >= sliderLvl.value()-2){
+				animar = false
+				
+				// if(espera < 700){
+				// 	espera++;
+				// }else{espera = 0;
+				// incLvlActual=2;
+				// for (let i = 0, len = lvl; i < len; i++) {
+				// 	incs[i] = 0;
+				// }
+				// }
+			}
+			else{
+				incLvlActual++;
+			}
 		}
 	}
 }
