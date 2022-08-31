@@ -4,17 +4,13 @@ class Linea{
 		this.p2o = p2;
 		this.p1 = p1
 		this.p2 = p2
-		// this.p1 = p1.sub(createVector(mouseX, mouseY));
-		// this.p2 = p2.sub(createVector(mouseX, mouseY));
 		this.v = p5.Vector.sub(p2,p1)
 		this.o = 0;
 		this.r = 1;
 	}
 	dibujar(){
 		strokeWeight(1)
-		push()
 		line(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
-		pop()
 	}
 }
 
@@ -42,8 +38,6 @@ class Linea1 extends Linea{
 	dibujar1(){
 		if(this.select) strokeWeight(10)
 		else strokeWeight(1)
-		push()
 		line(this.p1.x, this.p1.y, this.p2.x, this.p2.y)
-		pop()
 	}
 }

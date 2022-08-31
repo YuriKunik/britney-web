@@ -7,9 +7,9 @@ let p1_act;
 let lvl = 0;
 let lineas1 = [];
 let lineas = [];
-let listaSelectP1 = []
-let listaSelectP2 = []
+let modelos = ["sierpienski","cantor","arbol"];
 let checkerPant = false;
+let checkerZoom = false;
 let primer = true;
 let banderaFor = false;
 let cambLinea = false;
@@ -28,26 +28,57 @@ let escala = 1;
 let transl;
 let mousex;
 let mousey;
-let mouseOffx= 0;
-let mouseOffy= 0;
 let offX = 0;
 let offY = 0;
 let xAct = 0;
-let yAct = 0;
-let xAnt = 0;
+let yAct = 0; let xAnt = 0;
 let yAnt = 0;
+
+let inc = 0;
+let incs = [];
+let velocidad = 20;
+let espera = 100;
+let incLvlActual = 1;
+
 let cursorActual = "default";
+let cnvElt;
 
 function setup() {
 	cnv = createCanvas(windowWidth, windowHeight);
 	cnv.mousePressed(checkPant);
+	cnvElt = document.getElementById(cnv.id());
+	cnv.mouseWheel(checkZoom);
 	transl = createVector(0,0);
     frameRate(30)
-	inicio();
 	setupDom();
+	inicio();
+	// arbol();
+	// sierpienski();
 	cambiarMax();
-	xAct = 0;
-	yAct = 0;
+	incs = []
+	for (let i = 0, len = lvl; i < len; i++) {
+		incs.push(0);	
+	}
+}
+
+function reset(){
+	incs = []
+	for (let i = 0, len = lvl; i < len; i++) {
+		incs.push(0);	
+	}
+	incLvlActual = 1;
+}
+
+function checkZoom(){
+	checkerZoom = true;
+}
+
+function cambiarMaxSlider(){
+	encontrarMaxLvlSlider();
+	if(lineas1.length == 2) lvl -= 1;
+	cambiarGradiente();
+	sliderLvl.value(lvl);
+	reset();
 }
 
 function cambiarMax(){
@@ -55,10 +86,18 @@ function cambiarMax(){
 	if(lineas1.length == 2) lvl -= 1;
 	cambiarGradiente();
 	sliderLvl.value(lvl);
+	reset();
 }
 
+function encontrarMaxLvlSlider(){
+	for(let i = 0; i < sliderLvl.value() && lineas1.length ** i< limite; i++){
+		lvl = i;
+    }
+}
+
+
 function encontrarMaxLvl(){
-	for(let i = 0; i <= sliderLvl.value() && lineas1.length ** i< limite; i++){
+	for(let i = 0;  lineas1.length > 1 && lineas1.length ** i< limite; i++){
 		lvl = i;
     }
 }
@@ -83,74 +122,80 @@ function actSeleColor(){
 }
 
 function toggleBorrar(){
-	cambBorrar =! cambBorrar;
-	if(cambBorrar){
-		botones[1].html("Borrando")
-		document.getElementById("borrLinea").style.backgroundColor = "#C43BFF";
-	}
-	else{
-		botones[1].html("Borrar Linea")
-		document.getElementById("borrLinea").style.backgroundColor= "#9C2ECC";
+	if(!cambLinea){
+		cambBorrar =! cambBorrar;
+		if(cambBorrar){
+			botones[1].html("Borrando")
+			document.getElementById("borrLinea").style.backgroundColor = "#C43BFF";
+		}
+		else{
+			botones[1].html("Borrar Linea")
+			document.getElementById("borrLinea").style.backgroundColor= "#9C2ECC";
+		}
 	}
 }
 
 function borrarLineas(){
-	if(lineas1[lineas1.length-1].select) lineas1.splice(lineas1.length-1,1)
+	if(lineas1[lineas1.length-1].select) {
+		lineas1.splice(lineas1.length-1,1)
+		cambiarMax();
+	}
 	else{
 		for (let i = 0, len = lineas1.length-1; i < len; i++) {
-			if(lineas1[i].select) lineas1.splice(i,1)
+			if(lineas1[i].select){
+				lineas1.splice(i,1)
+				cambiarMax();
+			}
 		}
 	}
-    cambiarMax();
 }
 
 function checkearSelect(){
 	let select1 = false;
-	  strokeWeight(25);
-  if((mousex-l1.p1.x)**2 + (mousey-l1.p1.y)**2 < 625){
-			stroke(colores[1]);
-			point(l1.p1.x, l1.p1.y);
-			selectL1P1 = true;
-			select1 = true
-		}else if((mousex-l1.p2.x)**2 + (mousey-l1.p2.y)**2 < 625){
-			stroke(colores[1]);
-			point(l1.p2.x, l1.p2.y);
-			selectL1P2 = true;
-			select1 = true
-		}else{
-			selectL1P2 = false;
-			selectL1P1 = false;
-			document.getElementById(cnv.id()).style.cursor = "default";
-		}
-		for (var i = 0; i < lineas1.length; i++) {
-			if((mousex-lineas1[i].p1.x)**2 + (mousey-lineas1[i].p1.y)**2 < 625){
-				stroke(colores[2]);
-				point(lineas1[i].p1.x, lineas1[i].p1.y)
-				for(var j = 0; j< lineas1.length; j++){
-					lineas1[j].selectP1 = i == j;
-					lineas1[j].selectP2 = false;
-				}
-				select1 = true
-			}else if((mousex-lineas1[i].p2.x)**2 + (mousey-lineas1[i].p2.y)**2 < 625){
-				stroke(colores[2]);
-				point(lineas1[i].p2.x, lineas1[i].p2.y)
-				for(var j = 0; j< lineas1.length; j++){
-					lineas1[j].selectP2 = i == j;
-					lineas1[j].selectP1 = false;
-				}
-				select1 = true
-			}else {
-				lineas1[i].selectP1 = false;
-				lineas1[i].selectP2 = false;
+	strokeWeight(25);
+	if((mousex-l1.p1.x)**2 + (mousey-l1.p1.y)**2 < 625){
+		stroke(colores[1]);
+		point(l1.p1.x, l1.p1.y);
+		selectL1P1 = true;
+		select1 = true
+	}else if((mousex-l1.p2.x)**2 + (mousey-l1.p2.y)**2 < 625){
+		stroke(colores[1]);
+		point(l1.p2.x, l1.p2.y);
+		selectL1P2 = true;
+		select1 = true
+	}else{
+		selectL1P2 = false;
+		selectL1P1 = false;
+		document.getElementById(cnv.id()).style.cursor = "default";
+	}
+	for (var i = 0; i < lineas1.length; i++) {
+		if((mousex-lineas1[i].p1.x)**2 + (mousey-lineas1[i].p1.y)**2 < 625){
+			stroke(colores[2]);
+			point(lineas1[i].p1.x, lineas1[i].p1.y)
+			for(var j = 0; j< lineas1.length; j++){
+				lineas1[j].selectP1 = i == j;
+				lineas1[j].selectP2 = false;
 			}
+			select1 = true
+		}else if((mousex-lineas1[i].p2.x)**2 + (mousey-lineas1[i].p2.y)**2 < 625){
+			stroke(colores[2]);
+			point(lineas1[i].p2.x, lineas1[i].p2.y)
+			for(var j = 0; j< lineas1.length; j++){
+				lineas1[j].selectP2 = i == j;
+				lineas1[j].selectP1 = false;
+			}
+			select1 = true
+		}else {
+			lineas1[i].selectP1 = false;
+			lineas1[i].selectP2 = false;
 		}
-		if(select1) {
-			document.getElementById(cnv.id()).style.cursor = "grab";
-			select1 = false;
-		}else{
-			document.getElementById(cnv.id()).style.cursor = "default";
-		}
-
+	}
+	if(select1) {
+		document.getElementById(cnv.id()).style.cursor = "grab";
+		select1 = false;
+	}else{
+		document.getElementById(cnv.id()).style.cursor = "default";
+	}
 }
 
 function actualizarLineas(){
@@ -203,8 +248,10 @@ function checkPant(){
 }
 
 function agregarLinea(){
-	agregandoLinea = true;
-	primerPunto = true;
+	if(!cambBorrar){
+		agregandoLinea = true;
+		primerPunto = true;
+	}
 }
 
 function nuevaLinea(){
@@ -219,7 +266,7 @@ function nuevaLinea(){
 		q2 = createVector(mousex, mousey);
 		lineas1[lineas1.length-1] = new Linea1(q1,q2,l1,false,false);
 	}
-	document.getElementById(cnv.id()).style.cursor = "move";
+	cnvElt.style.cursor = "move";
 }
 
 function distPL(linea){
@@ -275,12 +322,16 @@ function mouseReleased(){
 	}
 	if(cambBorrar && lineas1.length > 0) borrarLineas();
 }
+
 let sf = 1, tx = 0, ty = 0;
 
 function applyScale(s) {
-    sf = sf * s;
-    tx = mouseX * (1-s) + tx * s;
-    ty = mouseY * (1-s) + ty * s;
+	if(checkerZoom){
+		sf = sf * s;
+		tx = mouseX * (1-s) + tx * s;
+		ty = mouseY * (1-s) + ty * s;
+		checkerZoom = false;
+	}
 }
 
 window.addEventListener("wheel", function(e) {
@@ -308,7 +359,7 @@ function draw() {
 		document.getElementById("borrLinea").style.backgroundColor = "#C43BFF";
 	}
 	if(agregandoLinea){
-		document.getElementById(cnv.id()).style.cursor = "copy";
+		cnvElt.style.cursor = "copy";
 		document.getElementById("agregLinea").style.backgroundColor= "#C43BFF"
 
 	}
@@ -331,18 +382,23 @@ function draw() {
       lineas1[i].dibujar1();
 	}
     lineas.push(lineas1);
-	for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
+	// for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
+	for (let i = 1, len = incLvlActual;i < len; i++) {
 		lineas.push([])
 		stroke(colores[i+2])
 		for (var j = 0; j < lineas[0].length; j++) {
 			for (var k = 0; k < lineas1.length; k++) {
 					s1 = lineas1[k].desp.copy()
+					// s1.rotate(map(inc, 0,velocidad,0,lineas[0][j].o))
 					s1.rotate(lineas[0][j].o)
 					s1.mult(lineas[0][j].r)
+					// s1.mult(map(inc,0,velocidad,0,lineas[0][j].r))
 					s1.add(lineas[0][j].p1);
 					let v1 =  lineas[0][j].v.copy()
 					v1.rotate(lineas1[k].o)
-					v1.mult(lineas1[k].r)
+					// v1.rotate(map(inc,0,velocidad,0,lineas1[k].o))
+					v1.mult(map(incs[i+1],0,velocidad,0,lineas1[k].r))
+					// v1.mult(lineas1[k].r)
 					let s2 = p5.Vector.add(s1,v1);
 					let l3 = new LineaN(s1,s2,lineas[0][j]);
 					l3.dibujar()
@@ -352,4 +408,23 @@ function draw() {
         lineas = [lineas[1]]
 	}
 	lineas = [];
+	if(incs[incLvlActual] < velocidad){ incs[incLvlActual] = (incs[incLvlActual] + 1) }
+	else{
+		// inc = 0;
+		// espera = 0;
+		if(incLvlActual >= sliderLvl.value()-2){
+			
+			if(espera < 700){
+				espera++;
+			}else{espera = 0;
+			incLvlActual=2;
+			for (let i = 0, len = lvl; i < len; i++) {
+				incs[i] = 0;
+			}
+			}
+		}
+		else{
+			incLvlActual++;
+		}
+	}
 }

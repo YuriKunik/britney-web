@@ -12,19 +12,19 @@ function setupDom(){
 	botones = selectAll('button');
 	botones[0].mousePressed(agregarLinea);
 	botones[1].mousePressed(toggleBorrar);
-	botones[2].mousePressed(guardarDibujo);
+	botones[2].mousePressed(reset);
+	botones[3].mousePressed(guardarDibujo);
 	colores.push(color(20));
 	colores.push("#EB316B");
 	colores.push("#F5EF63");
 	color1 = color("#D66C1E")
 	color2 = color("#219B15")
 	for (let i = 0; i < maxNivel-2; i++) {
-	//	seleLvl.option("Color nivel " + str(i+2), i+3);	
 		let c = lerpColor(color1, color2, i/maxNivel);
 		colores.push(c)
 	}
 	sliderLvl = select('#sliderLvl');
-	sliderLvl.input(cambiarMax)
+	sliderLvl.input(cambiarMaxSlider)
 	seleFrom = select("#seleFrom");
 	seleFrom.input(cambiarGradiente);
 	seleTo = select("#seleTo");

@@ -1,42 +1,58 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
     <script src="p5.js"></script>
     <script src="p5.sound.min.js"></script>
+	<script src="modelos.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
-
-  </head>
-  <body>
-    <main>
-    </main>
-    <!-- <script src="sketch.js"></script> -->
-    <div id="Menu">
+</head>
+<body>
+	<main>
+	</main>
+	<div id="Menu">
 		<div id="Menuheader">
 			Menu 
 		</div>
 		<button id="agregLinea">Agregar Linea</button>
 		<button id="borrLinea">Borrar Linea</button>
+		<button id="resetearAnim">Iniciar animacion</button>
 		<button>Guardar Dibujo</button>
-		<div id="Nivel">
-		Nivel:
-		<input type="range" name="sliderLvl" id="sliderLvl" min = "1" max = "100" value="1">
+		<div id="Nivel" class = "Menu">
+			Nivel:
+			<input type="range" name="sliderLvl" id="sliderLvl" min = "1" max = "100" value="1">
 		</div>
-		<div id="ColoresFromTo">
-		Color inicial:
-		<input type="color" name="seleFrom" id="seleFrom" value="#D66C1E">
-		Color Final:
-		<input type="color" name="seleTo" id="seleTo" value="#219B15">
+		<div id="ColoresFromTo" class = "Menu">
+			Color inicial:
+			<input type="color" name="seleFrom" id="seleFrom" value="#D66C1E">
+			Color Final:
+			<input type="color" name="seleTo" id="seleTo" value="#219B15">
 		</div>
-		<div id="OtrosColores">
-		Otros Colores:
-		<select name="seleLvl" id="seleLvl" >
-		</select>
-		<input type="color" name="seleColor" id="seleColor" value="#141414">	
+		<div id="OtrosColores" class = "Menu">
+			Otros Colores:
+			<select name="seleLvl" id="seleLvl" >
+			</select>
+			<input type="color" name="seleColor" id="seleColor" value="#141414">	
+		</div>
+		<button id="BotonGaleria">Abrir galeria</button>
+	</div>
+	<div id="Galeria" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			  <div class="columna">
+				<img src="fotos/sierpinski.jpg" onclick="cambiarDibuj('sierpienski')" class="galeria">
+			  </div>
+			  <div class="columna">
+				<img src="fotos/arbol.jpg" onclick="cambiarDibuj('arbol')" class="galeria">
+			  </div>
+			  <div class="columna">
+				<img src="fotos/cantor.jpg" onclick="cambiarDibuj('cantor')" class="galeria">
 		</div>
 	</div>
+
 	<script src="sketch.js"></script>
-    <script src="linea.js"></script>
-    <script src="modelos.js"></script>
-    <script src="elementos_dom.js"></script>
+	<script src="linea.js"></script>
+	<script src="modal.js"></script>
+	<script src="elementos_dom.js"></script>
 	<script src="mover_div.js"></script>
 
 </body></html>
