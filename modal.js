@@ -7,6 +7,8 @@ var btn = document.getElementById("BotonGaleria");
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
+var texto = document.getElementsByClassName("texto");
+
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";

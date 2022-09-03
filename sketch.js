@@ -1,13 +1,13 @@
 let p1;
 let p2;
-let l1;
+// let l1;
 let l2;
 let cnv;
 let p1_act;
 let lvl = 0;
-let lineas1 = [];
+// let lineas1 = [];
 let lineas = [];
-let modelos = ["sierpienski","cantor","arbol"];
+// let modelos = ["sierpienski","cantor","arbol"];
 let checkerPant = false;
 let checkerZoom = false;
 let primer = true;
@@ -53,13 +53,12 @@ function setup() {
     frameRate(30)
 	setupDom();
 	inicio();
-	// arbol();
-	// sierpienski();
 	cambiarMax();
 	incs = []
 	for (let i = 0, len = lvl; i < len; i++) {
 		incs.push(0);	
 	}
+    crearModelos();
 }
 
 function reset(){
@@ -106,6 +105,7 @@ function encontrarMaxLvlSlider(){
 		lvl = i;
     }
 }
+
 
 
 function encontrarMaxLvl(){
@@ -394,7 +394,6 @@ function draw() {
       lineas1[i].dibujar1();
 	}
     lineas.push(lineas1);
-	// for (let i = 1, len = sliderLvl.value()-2;i < len; i++) {
 	for (let i = 1, len = incLvlActual;i < len; i++) {
 		lineas.push([])
 		stroke(colores[i+2])
@@ -419,19 +418,8 @@ function draw() {
 	if(animar){
 		if(incs[incLvlActual] < velocidad){ incs[incLvlActual] = (incs[incLvlActual] + 1) }
 		else{
-			// inc = 0;
-			// espera = 0;
 			if(incLvlActual >= sliderLvl.value()-2){
 				animar = false
-				
-				// if(espera < 700){
-				// 	espera++;
-				// }else{espera = 0;
-				// incLvlActual=2;
-				// for (let i = 0, len = lvl; i < len; i++) {
-				// 	incs[i] = 0;
-				// }
-				// }
 			}
 			else{
 				incLvlActual++;
