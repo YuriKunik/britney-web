@@ -38,4 +38,5 @@ function setupDom(){
 
 	seleColor = select("#seleColor");
 	seleColor.input(setColor);
+	botones[5].mousePressed(seleccionar);
 }

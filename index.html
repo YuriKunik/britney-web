@@ -11,11 +11,11 @@
 	</main>
 	<div id="Menu">
 		<div id="Menuheader">
-			Menu 
+			Menú 
 		</div>
 		<button id="agregLinea">Agregar Linea</button>
 		<button id="borrLinea">Borrar Linea</button>
-		<button id="resetearAnim">Iniciar animacion</button>
+		<button id="resetearAnim">Iniciar animación</button>
 		<button>Guardar Dibujo</button>
 		<div id="Nivel" class = "Menu">
 			Nivel:
@@ -33,7 +33,7 @@
 			</select>
 			<input type="color" name="seleColor" id="seleColor" value="#141414">	
 		</div>
-		<button id="BotonGaleria">Abrir galeria</button>
+		<button id="BotonGaleria">Abrir galería</button>
 	</div>
 	<div id="Galeria" class="modal">
 		<div class="modal-content">
@@ -48,10 +48,16 @@
 				  <div class="columna">
 					<img src="fotos/cantor.jpg" onclick="cambiarDibuj('cantor')" class="galeria">
 				  </div>
+				  <div class="columna">
+					<img src="fotos/rama.jpg" onclick="cambiarDibuj('rama')" class="galeria">
+				  </div>
 			 </div>
-			<p id="data" class="texto"> 
-				allo
-			</p>
+             <div class="contenidos">
+                <p id="data" class="texto"> 
+                    Seleccione una imagen para obtener información.                                                                                                         
+                </p> 
+                <button id="seleccionar" class="seleccionar">seleccionar</button>
+             </div>
 		</div>
 	</div>
 

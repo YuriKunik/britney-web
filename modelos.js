@@ -1,7 +1,9 @@
 let l1;
 let lineas1 = [];
 let modelos = [];
+let nombre_act;
 function crearModelos() {
+    // Esta función y la clase por ahora no tienen un uso justificable.
      // Cantor
     let lineas1aux = [];
     p1 = createVector(width/2-125, height/2);
@@ -18,12 +20,12 @@ function crearModelos() {
 
     modelos.push(new Modelo("cantor", 
                             l1aux,
-                            lineas1,
+                            lineas1aux,
                             "#FFFFFF",
                             "#FFFFFF",
                             "#FFFFFF",
                             "#FFFFFF",
-                            "Cantor"
+                            "El conjunto de Cantor es uno de los casos más simples de un conjunto similar a si mismo. Sin embargo, dentro de la matemática es famoso por su gran número de propiedades anti intuitivas"
     ))
 
     // Sierpienski
@@ -50,14 +52,62 @@ function crearModelos() {
 
     modelos.push(new Modelo("sierpienski", 
                             l1aux,
-                            lineas1,
+                            lineas1aux,
                             "#FFFFFF",
                             "#FFFFFF",
                             "#FFFFFF",
                             "#FFFFFF",
-                            "The Sierpiński triangle (sometimes spelled Sierpinski), also called the Sierpiński gasket or Sierpiński sieve, is a fractal attractive fixed set with the overall shape of an equilateral triangle, subdivided recursively into smaller equilateral triangles. Originally constructed as a curve, this is one of the basic examples of self-similar sets—that is, it is a mathematically generated pattern that is reproducible at any magnification or reduction. It is named after the Polish mathematician Wacław Sierpiński, but appeared as a decorative pattern many centuries before the work of Sierpiński. "
+                            "El triángulo de Sierpinski es un fractal con la forma de un triángulo equilátero subdividido recursivamente en triangulitos equiláteros más pequeños. Si bien su nombre se debe al matemático polaco Waclaw Sierpinski, el triángulo apareció mucho antes como un patron decorativo."
     ))
-   
+ 	lineas1aux = [];
+	p1 = createVector(width/2, height/2+50);
+	p2 = createVector(width/2, height/2 - 50 );
+	l1aux = new Linea(p1,p2);
+	q1 = createVector(width/2, height/2 - 50);
+	q2 = createVector(width/2+50 , height/2 - 100);
+	l2 = new Linea1(q1,q2,l1aux,false,false);
+	lineas1aux.push(l2)
+	q1 = createVector(width/2, height/2-50);
+	q2 = createVector(width/2-50, height/2 -100);
+	l3 = new Linea1(q1,q2,l1,false,false);
+	lineas1aux.push(l3)
+	seleTo.value("#219B15")
+	seleFrom.value("#D66C1E")
+	cambiarMax();
+    modelos.push(new Modelo("arbol", 
+                            l1aux,
+                            lineas1aux,
+                            "#FFFFFF",
+                            "#FFFFFF",
+                            "#219B14",
+                            "#D66C1E",
+                            "En geometría, un dosel fractal, también denominado árbol fractal, es uno de los tipos de fractal más sencillos de generar. Consiste en tomar un segmento, bifurcarlo en uno de sus extremos uniéndolo con dos segmentos más pequeños, bifurcar a su vez estos dos segmentos más pequeños y así indefinidamente."
+    ))
+    modelos.push(new Modelo("rama", 111,11,1,1,1,1,"En la naturaleza se pueden encontrar muchos ejemplos de recursión ya que, de esta forma, se pueden generar estructuras complejos a partir de muy poca información."))
+}
+
+function rama(){
+	lineas1 = [];
+    xoff = 50
+    yoff = -100
+	p1 = createVector(width/2-xoff, height/2+175-yoff);
+	p2 = createVector(width/2-xoff, height/2 - 50 -yoff);
+	l1 = new Linea(p1,p2);
+	q1 = createVector(width/2-xoff, height/2 - 50-yoff);
+	q2 = createVector(width/2+50-xoff , height/2 - 100-yoff);
+	l2 = new Linea1(q1,q2,l1,false,false);
+	lineas1.push(l2)
+	q1 = createVector(width/2-xoff, height/2-50-yoff);
+	q2 = createVector(width/2-50-xoff, height/2 -100-yoff);
+	l3 = new Linea1(q1,q2,l1,false,false);
+	lineas1.push(l3)
+	q1 = createVector(width/2-xoff, height/2-50-yoff);
+	q2 = createVector(width/2+20-xoff, height/2 -200-yoff);
+	l4 = new Linea1(q1,q2,l1,false,false);
+	lineas1.push(l4)
+	seleTo.value("#219B15")
+	seleFrom.value("#D66C1E")
+	cambiarMax();
 }
 
 function sierpienski(){
@@ -104,8 +154,8 @@ function cantor(){
 }
 
 function cambiarDibuj(nombre){
-    let actual;
-    window[nombre]();
+    // window[nombre]();
+    nombre_act = nombre;
     console.log(nombre)
     console.log(modelos[0].nombre)
     for (let i = 0, len = modelos.length; i < len; i++) {
@@ -115,6 +165,11 @@ function cambiarDibuj(nombre){
     }
 }
 
+function seleccionar(){
+    window[nombre_act]();
+    var modal = document.getElementById("Galeria");
+    modal.style.display = "none";
+}
 
 function inicio(){
 	lineas1 = [];
