@@ -83,7 +83,7 @@ function crearModelos() {
                             "#D66C1E",
                             "En geometría, un dosel fractal, también denominado árbol fractal, es uno de los tipos de fractal más sencillos de generar. Consiste en tomar un segmento, bifurcarlo en uno de sus extremos uniéndolo con dos segmentos más pequeños, bifurcar a su vez estos dos segmentos más pequeños y así indefinidamente."
     ))
-    modelos.push(new Modelo("rama", 111,11,1,1,1,1,"En la naturaleza se pueden encontrar muchos ejemplos de recursión ya que, de esta forma, se pueden generar estructuras complejos a partir de muy poca información."))
+    modelos.push(new Modelo("rama", 111,11,1,1,1,1,"En la naturaleza existen ejemplos de recursión debido a que permite generar estructuras complejos a partir de muy poca información."))
 }
 
 function rama(){
